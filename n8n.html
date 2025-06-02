@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automação Jurídica - Guia de Implementação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a365d;
+            --secondary: #2d3748;
+            --accent: #b8860b;
+            --success: #2f855a;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7fafc;
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --border: #e2e8f0;
+            --shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .overview {
+            background: var(--bg-primary);
+            margin: -1rem 1rem 2rem;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--accent);
+        }
+
+        .overview h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .section {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.5rem;
+        }
+
+        .workflow-step {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--bg-secondary);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .step-content {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .step-section {
+            background: var(--bg-primary);
+            padding: 1rem;
+            border-radius: 4px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .step-section h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .step-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-section li {
+            padding: 0.2rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .step-section li::before {
+            content: '•';
+            position: absolute;
+            left: 0.5rem;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .auto-tag {
+            background: var(--success);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .manual-tag {
+            background: var(--accent);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .tech-category {
+            background: var(--bg-secondary);
+            padding: 1.2rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .tech-category h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--primary);
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .tech-tag {
+            background: var(--primary);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+            background: var(--bg-secondary);
+            padding: 1.2rem;
+            border-radius: 6px;
+            margin-left: 1rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.4rem;
+            top: 1.2rem;
+            width: 0.6rem;
+            height: 0.6rem;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 2px solid var(--bg-primary);
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+            font-size: 1rem;
+        }
+
+        .timeline-duration {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+
+        .timeline-item p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .overview {
+                margin: -1rem 0.5rem 1.5rem;
+                padding: 1.5rem;
+            }
+            
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Automação Jurídica Inteligente</h1>
+            <p>Sistema de Gestão Processual com N8N + Supabase</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="overview">
+            <h2>Visão da Solução</h2>
+            <p>
+                Sistema automatizado onde as informações dos clientes são inseridas apenas uma vez, 
+                organizadas em banco central (Supabase), e todo fluxo - da triagem ao andamento 
+                processual - é automatizado com N8N, reduzindo falhas e acelerando entregas.
+            </p>
+        </div>
+
+        <main>
+            <section class="section">
+                <h2 class="section-title">Fluxo de Automação</h2>
+                
+                <div class="workflow-step">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Entrada do Cliente (Triagem Inicial)</div>
+                    </div>
+                    
+                    <div class="step-content">
+                        <div class="step-section">
+                            <h4>Como Acontece:</h4>
+                            <ul>
+                                <li>Formulário Web simples ou via WhatsApp</li>
+                                <li>Cliente informa: nome, contato, problema jurídico</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="step-section">
+                            <h4>N8N Automatiza: <span class="auto-tag">AUTOMÁTICO</span></h4>
+                            <ul>
+                                <li>Registra no Supabase com status "Aguardando triagem"</li>
+                                <li>Notifica equipe jurídica via email ou WhatsApp</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="step-section">
+                            <h4>Ação Manual: <span class="manual-tag">MANUAL</span></h4>
+                            <ul>
+                                <li>Advogado avalia e decide: Aceitar ou Recusar</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Decisão de Aceite</div>
+                    </div>
+                    
+                    <div class="step-content">
+                        <div class="step-section">
+                            <h4>Se NÃO aceitar: <span class="auto-tag">AUTOMÁTICO</span></h4>
+                            <ul>
+                                <li>Atualiza status para "Não aceito" no Supabase</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="step-section">
+                            <h4>Se aceitar: <span class="auto-tag">AUTOMÁTICO</span></h4>
+                            <ul>
+                                <li>Envia checklist de documentos via email/WhatsApp</li>
+                                <li>Disponibiliza link para upload seguro</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Análise de Viabilidade</div>
+                    </div>
+                    
+                    <div class="step-content">
+                        <div class="step-section">
+                            <h4>Ação Manual: <span class="manual-tag">MANUAL</span></h4>
+                            <ul>
+                                <li>Advogado analisa documentos e viabilidade</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="step-section">
+                            <h4>Se viável: <span class="auto-tag">AUTOMÁTICO</span></h4>
+                            <ul>
+                                <li>Gera procuração, declaração de pobreza e contrato</li>
+                                <li>Envia para assinatura digital (D4Sign/Clicksign)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Coleta de Assinaturas</div>
+                    </div>
+                    
+                    <div class="step-content">
+                        <div class="step-section">
+                            <h4>N8N Gerencia: <span class="auto-tag">AUTOMÁTICO</span></h4>
+                            <ul>
+                                <li>Monitora status das assinaturas</li>
+                                <li>Atualiza Supabase para "Contrato fechado" quando completo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <div class="step-title">Geração da Petição Inicial</div>
+                    </div>
+                    
+                    <div class="step-content">
+                        <div class="step-section">
+                            <h4>N8N (Opcional): <span class="auto-tag">AUTOMÁTICO</span></h4>
+                            <ul>
+                                <li>Gera modelo inicial com dados cadastrados</li>
+                                <li>Envia para revisão da equipe jurídica</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-header">
+                        <div class="step-number">6</div>
+                        <div class="step-title">Agendamento de Perícias/Audiências</div>
+                    </div>
+                    
+                    <div class="step-content">
+                        <div class="step-section">
+                            <h4>N8N Executa: <span class="auto-tag">AUTOMÁTICO</span></h4>
+                            <ul>
+                                <li>Envia link de agendamento ao cliente</li>
+                                <li>Integração com Calendly ou Google Calendar</li>
+                                <li>Confirma datas no Supabase</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-header">
+                        <div class="step-number">7</div>
+                        <div class="step-title">Andamento Processual</div>
+                    </div>
+                    
+                    <div class="step-content">
+                        <div class="step-section">
+                            <h4>Ação Manual: <span class="manual-tag">MANUAL</span></h4>
+                            <ul>
+                                <li>Equipe alimenta número do processo</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="step-section">
+                            <h4>N8N Monitora: <span class="auto-tag">AUTOMÁTICO</span></h4>
+                            <ul>
+                                <li>Consulta site do tribunal automaticamente</li>
+                                <li>Atualiza status periodicamente no Supabase</li>
+                                <li>Notifica atualizações para cliente e equipe</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Stack Tecnológico</h2>
+                
+                <div class="tech-grid">
+                    <div class="tech-category">
+                        <h3>Backend & Database</h3>
+                        <div class="tech-tags">
+                            <span class="tech-tag">Supabase</span>
+                            <span class="tech-tag">PostgreSQL</span>
+                            <span class="tech-tag">Node.js</span>
+                            <span class="tech-tag">TypeScript</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <h3>Automação</h3>
+                        <div class="tech-tags">
+                            <span class="tech-tag">N8N</span>
+                            <span class="tech-tag">Webhooks</span>
+                            <span class="tech-tag">CRON Jobs</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <h3>Integrações</h3>
+                        <div class="tech-tags">
+                            <span class="tech-tag">WhatsApp API</span>
+                            <span class="tech-tag">D4Sign</span>
+                            <span class="tech-tag">Calendly</span>
+                            <span class="tech-tag">Google APIs</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <h3>Segurança</h3>
+                        <div class="tech-tags">
+                            <span class="tech-tag">JWT</span>
+                            <span class="tech-tag">OAuth 2.0</span>
+                            <span class="tech-tag">LGPD</span>
+                            <span class="tech-tag">SSL/TLS</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Cronograma de Implementação</h2>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-title">Fase 1: Arquitetura e Setup</div>
+                        <div class="timeline-duration">Duração: 3-5 dias</div>
+                        <p>Configuração do Supabase, estrutura do banco de dados e setup inicial do N8N.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-title">Fase 2: Integração Básica</div>
+                        <div class="timeline-duration">Duração: 5-7 dias</div>
+                        <p>Workflows básicos: captação de clientes, triagem inicial e notificações automáticas.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-title">Fase 3: Assinatura Digital</div>
+                        <div class="timeline-duration">Duração: 4-6 dias</div>
+                        <p>Integração com D4Sign/Clicksign e monitoramento de assinaturas.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-title">Fase 4: Automações Avançadas</div>
+                        <div class="timeline-duration">Duração: 6-8 dias</div>
+                        <p>Web scraping para consultas processuais e agendamento automático.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-title">Fase 5: Segurança e Compliance</div>
+                        <div class="timeline-duration">Duração: 3-4 dias</div>
+                        <p>Implementação de LGPD, auditoria e controles de acesso.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-title">Fase 6: Testes e Deploy</div>
+                        <div class="timeline-duration">Duração: 4-5 dias</div>
+                        <p>Testes integrados, correção de bugs e deploy em produção.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
