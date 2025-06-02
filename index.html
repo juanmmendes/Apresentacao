@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integração de Ferramentas Jurídicas com N8N</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .workflow-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .workflow-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #4a5568;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .workflow-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .workflow-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .workflow-step {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 15px;
+            padding: 25px;
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .step-tools {
+            color: #4a5568;
+            font-weight: 500;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 8px 15px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .arrow {
+            font-size: 2rem;
+            color: #667eea;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .development-steps {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .dev-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .dev-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .dev-card:hover {
+            transform: scale(1.05);
+        }
+
+        .dev-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .n8n-highlight {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        .n8n-highlight h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .service-explanation {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .methodology-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .method-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #4299e1;
+            transition: transform 0.3s ease;
+        }
+
+        .method-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .method-card h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .method-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .method-card li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .method-card li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: #4299e1;
+        }
+
+        .reporting-options {
+            margin: 40px 0;
+        }
+
+        .reporting-options h3 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .option-card {
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .option-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .google-classroom {
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            color: white;
+        }
+
+        .google-classroom:hover {
+            border-color: #1a73e8;
+        }
+
+        .github {
+            background: linear-gradient(135deg, #24292e 0%, #586069 100%);
+            color: white;
+        }
+
+        .github:hover {
+            border-color: #f6f8fa;
+        }
+
+        .option-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .option-card h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .option-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .option-card li {
+            padding: 5px 0;
+            opacity: 0.9;
+        }
+
+        .option-benefit {
+            background: rgba(255,255,255,0.2);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .daily-workflow {
+            background: linear-gradient(135deg, #805ad5 0%, #553c9a 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .daily-workflow h3 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+
+        .timeline {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-time {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            min-width: 120px;
+            text-align: center;
+            margin-right: 20px;
+        }
+
+        .timeline-content strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .timeline-content p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .tech-stack {
+            background: #2d3748;
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tech-badge {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 16px;
+            border-radius: 25px;
+            border: 2px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .tech-badge:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .workflow-section {
+                padding: 20px;
+            }
+            
+            .workflow-step {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔗 Sistema de Integração Jurídica</h1>
+            <p>Automação completa do fluxo de trabalho jurídico com N8N</p>
+        </div>
+
+        <div class="n8n-highlight">
+            <h2>⚡ Powered by N8N</h2>
+            <p>Orquestração inteligente de ferramentas jurídicas para máxima eficiência</p>
+        </div>
+
+        <div class="workflow-section">
+            <h2 class="workflow-title">Fluxo de Automação</h2>
+            <div class="workflow-container">
+                <div class="workflow-step">
+                    <div class="step-title">📋 Captação de Cliente</div>
+                    <div class="step-tools">Pipedrive + ManyContent</div>
+                </div>
+                
+                <div class="arrow">↓</div>
+                
+                <div class="workflow-step">
+                    <div class="step-title">⚖️ Gestão do Processo Jurídico</div>
+                    <div class="step-tools">Astrea + Trâmite Inteligente</div>
+                </div>
+                
+                <div class="arrow">↓</div>
+                
+                <div class="workflow-step">
+                    <div class="step-title">🔍 Pesquisa e Fundamentação</div>
+                    <div class="step-tools">ChatGPT + Jusbrasil + AASP + Jusfy</div>
+                </div>
+                
+                <div class="arrow">↓</div>
+                
+                <div class="workflow-step">
+                    <div class="step-title">📝 Elaboração de Documentos</div>
+                    <div class="step-tools">ChatGPT + Jusfy</div>
+                </div>
+                
+                <div class="arrow">↓</div>
+                
+                <div class="workflow-step">
+                    <div class="step-title">✍️ Assinatura e Formalização</div>
+                    <div class="step-tools">Plataforma de Assinatura Digital</div>
+                </div>
+                
+                <div class="arrow">↓</div>
+                
+                <div class="workflow-step">
+                    <div class="step-title">📊 Relatórios e Comunicação</div>
+                    <div class="step-tools">ManyContent + Astrea</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="development-steps">
+            <h2 class="workflow-title">Cronograma de Desenvolvimento</h2>
+            <div class="dev-grid">
+                <div class="dev-card">
+                    <h3>🏗️ Arquitetura do Sistema</h3>
+                    <p>Definição da estrutura de integração, mapeamento de APIs e fluxos de dados entre as ferramentas.</p>
+                </div>
+                
+                <div class="dev-card">
+                    <h3>🔧 Análise de Ferramentas</h3>
+                    <p>Verificação de APIs disponíveis, limitações técnicas e melhores caminhos para integração.</p>
+                </div>
+                
+                <div class="dev-card">
+                    <h3>💻 Desenvolvimento</h3>
+                    <p>Implementação dos workflows no N8N, criação de conectores customizados e automações.</p>
+                </div>
+                
+                <div class="dev-card">
+                    <h3>🧪 Testes Unitários</h3>
+                    <p>Validação de cada integração, testes de carga e verificação de robustez do sistema.</p>
+                </div>
+                
+                <div class="dev-card">
+                    <h3>✅ Validação e Legalização</h3>
+                    <p>Conformidade com normas jurídicas, validação de processos e certificação de segurança.</p>
+                </div>
+                
+                <div class="dev-card">
+                    <h3>🔒 Proteção de Dados</h3>
+                    <p>Implementação de LGPD, criptografia, auditoria e controles de acesso granular.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-explanation">
+            <h2 class="workflow-title">Metodologia de Desenvolvimento</h2>
+            
+            <div class="methodology-container">
+                <div class="method-card">
+                    <h3>🎯 Abordagem Direta</h3>
+                    <p><strong>Sem enrolação, foco no resultado:</strong></p>
+                    <ul>
+                        <li>Desenvolvimento iterativo com entregas funcionais</li>
+                        <li>Documentação técnica objetiva</li>
+                        <li>Testes práticos em ambiente real</li>
+                        <li>Solução de problemas em tempo real</li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <h3>📚 Processo de Aprendizado</h3>
+                    <p><strong>Aprendizado orientado a projeto:</strong></p>
+                    <ul>
+                        <li>Estudo das APIs das ferramentas jurídicas</li>
+                        <li>Implementação prática no N8N</li>
+                        <li>Resolução de desafios técnicos reais</li>
+                        <li>Otimização baseada em performance</li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <h3>📊 Relatórios Diários</h3>
+                    <p><strong>Transparência total do progresso:</strong></p>
+                    <ul>
+                        <li>Atividades desenvolvidas no dia</li>
+                        <li>Problemas encontrados e soluções</li>
+                        <li>Código implementado e testes realizados</li>
+                        <li>Próximos passos e planejamento</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="reporting-options">
+                <h3>📋 Opções de Acompanhamento</h3>
+                <div class="options-grid">
+                    <div class="option-card google-classroom">
+                        <div class="option-icon">🎓</div>
+                        <h4>Google Classroom</h4>
+                        <p>Turma exclusiva para postar:</p>
+                        <ul>
+                            <li>Relatórios diários estruturados</li>
+                            <li>Código desenvolvido</li>
+                            <li>Screenshots de progresso</li>
+                            <li>Documentação técnica</li>
+                        </ul>
+                        <div class="option-benefit">✅ Fácil acompanhamento visual</div>
+                    </div>
+
+                    <div class="option-card github">
+                        <div class="option-icon">💻</div>
+                        <h4>GitHub Repository</h4>
+                        <p>Repositório profissional com:</p>
+                        <ul>
+                            <li>Commits diários documentados</li>
+                            <li>README atualizado constantemente</li>
+                            <li>Issues para tracking de problemas</li>
+                            <li>Releases com versões funcionais</li>
+                        </ul>
+                        <div class="option-benefit">✅ Controle de versão profissional</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="daily-workflow">
+                <h3>🔄 Rotina de Trabalho</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-time">08:00</div>
+                        <div class="timeline-content">
+                            <strong>Planning Diário</strong>
+                            <p>Definição de metas e prioridades do dia</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">08:30-15:30</div>
+                        <div class="timeline-content">
+                            <strong>Desenvolvimento Ativo</strong>
+                            <p>Coding, testes, integração, documentação</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">16:00</div>
+                        <div class="timeline-content">
+                            <strong>Relatório do Dia</strong>
+                            <p>Documentação do progresso e próximos passos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tech-stack">
+            <h2>Stack Tecnológico</h2>
+            <div class="tech-badges">
+                <div class="tech-badge">N8N Workflows</div>
+                <div class="tech-badge">Node.js</div>
+                <div class="tech-badge">REST APIs</div>
+                <div class="tech-badge">Webhook Integration</div>
+                <div class="tech-badge">PostgreSQL</div>
+                <div class="tech-badge">Docker</div>
+                <div class="tech-badge">JWT Authentication</div>
+                <div class="tech-badge">LGPD Compliance</div>
+                <div class="tech-badge">SSL/TLS</div>
+                <div class="tech-badge">Microservices</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animação de entrada suave
+        document.addEventListener('DOMContentLoaded', function() {
+            const steps = document.querySelectorAll('.workflow-step');
+            const devCards = document.querySelectorAll('.dev-card');
+            
+            // Animação sequencial dos steps
+            steps.forEach((step, index) => {
+                step.style.opacity = '0';
+                step.style.transform = 'translateX(-50px)';
+                
+                setTimeout(() => {
+                    step.style.transition = 'all 0.6s ease';
+                    step.style.opacity = '1';
+                    step.style.transform = 'translateX(0)';
+                }, index * 200);
+            });
+            
+            // Animação dos cards de desenvolvimento
+            devCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 1000 + (index * 100));
+            });
+        });
+
+        // Efeito parallax suave no scroll
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.header');
+            const speed = scrolled * 0.5;
+            
+            parallax.style.transform = `translateY(${speed * 0.3}px)`;
+        });
+    </script>
+</body>
+</html>
