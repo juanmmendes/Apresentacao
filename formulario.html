@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Envio de Documentos • Escritório Marinho Mendes</title>
+
+    <!-- Fontes Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <!-- ========  ESTILO  ========= -->
+    <style>
+        /* ---------- RESET / VARIÁVEIS ---------- */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary-blue:#002C5F; --dark-blue:#1e3a8a; --gold:#C8A045;
+            --white:#FFF; --light-gray:#F8F9FA; --border-gray:#E5E7EB;
+            --text-gray:#6B7280; --error-red:#DC2626;
+        }
+
+        body   { font-family:"Open Sans",sans-serif; line-height:1.6; background:var(--light-gray); color:var(--primary-blue); }
+        h1,h2,h3 { font-family:"Merriweather",serif; font-weight:400; }
+
+        /* ---------- HEADER ---------- */
+        .header{background:linear-gradient(135deg,var(--primary-blue),var(--dark-blue));color:var(--white);padding:1rem 0;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.2);}
+        .header-content{max-width:1200px;margin:auto;padding:0 1rem;display:flex;align-items:center;gap:1rem;}
+        .logo{display:flex;align-items:center;gap:.75rem;}
+        .logo-icon{width:56px;height:56px;border:2px solid var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--gold);}
+        .logo-title{font-size:1.5rem;letter-spacing:.5px;text-transform:uppercase;}
+        .logo-subtitle{font-size:.8rem;font-style:italic;opacity:.85;margin-top:.25rem;}
+
+        /* ---------- CONTAINER ---------- */
+        .container{max-width:800px;margin:auto;padding:2rem 1rem;}
+
+        /* ---------- INTRODUÇÃO ---------- */
+        .intro-section{background:var(--white);border-radius:12px;padding:2rem;margin-bottom:2rem;box-shadow:0 4px 6px rgba(0,0,0,.05);}
+        .intro-title{font-size:1.625rem;text-align:center;margin-bottom:1rem;}
+        .intro-text{font-size:1.125rem;color:var(--text-gray);text-align:center;margin-bottom:1.5rem;}
+        .intro-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1.5rem;}
+        .feature{display:flex;align-items:center;gap:.75rem;padding:.75rem;background:var(--light-gray);border-radius:8px;}
+        .feature-icon{width:32px;height:32px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--white);}
+
+        /* ---------- FORM ---------- */
+        .form-container{background:var(--white);border-radius:12px;padding:2rem;box-shadow:0 4px 6px rgba(0,0,0,.05);}
+        .section-title{font-size:1.125rem;margin-bottom:1rem;border-bottom:1px solid var(--border-gray);padding-bottom:.5rem;}
+        .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;}
+        .form-group{display:flex;flex-direction:column;}
+        .form-label{font-weight:600;margin-bottom:.5rem;}
+        .required::after{content:" *";color:var(--error-red);}
+        .form-input,.form-select{padding:.875rem;border:2px solid var(--border-gray);border-radius:8px;font-size:1rem;transition:border-color .3s box-shadow .3s;}
+        .form-input:focus,.form-select:focus{outline:none;border-color:var(--primary-blue);box-shadow:0 0 0 3px rgba(0,44,95,.1);}
+
+        /* ---------- UPLOAD ---------- */
+        .upload-group{margin-bottom:1.5rem;padding:1rem;border:2px dashed var(--border-gray);border-radius:12px;}
+        .upload-group.required{border-color:var(--gold);background:rgba(200,160,69,.05);}
+        .upload-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+        .upload-icon{width:40px;height:40px;background:var(--primary-blue);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--white);}
+        .upload-buttons{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:.75rem;}
+        .upload-button{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;border-radius:8px;font-size:.875rem;cursor:pointer;font-weight:500;background:var(--white);border:2px solid var(--primary-blue);color:var(--primary-blue);transition:.3s;}
+        .upload-button:hover{background:var(--primary-blue);color:var(--white);}
+        .upload-button.camera{border-color:var(--gold);color:var(--gold);}
+        .upload-button.camera:hover{background:var(--gold);color:var(--white);}
+        .file-preview{display:none;align-items:center;justify-content:space-between;margin-top:.75rem;padding:.75rem;background:var(--light-gray);border-radius:6px;}
+        .file-preview.visible{display:flex;}
+        .remove-file{background:var(--error-red);color:var(--white);border:none;border-radius:4px;padding:.25rem .5rem;font-size:.75rem;cursor:pointer;}
+
+        /* ---------- BOTÃO SUBMIT ---------- */
+        .submit-container{text-align:center;margin-top:2rem;}
+        .submit-button{display:inline-flex;align-items:center;gap:.5rem;padding:1rem 3rem;border-radius:6px;font-size:1rem;font-weight:500;letter-spacing:.5px;background:var(--primary-blue);color:var(--white);border:2px solid var(--primary-blue);cursor:pointer;transition:.3s;}
+        .submit-button:hover{background:var(--white);color:var(--primary-blue);}
+
+        /* ---------- FOOTER ---------- */
+        .footer{background:linear-gradient(135deg,var(--primary-blue),var(--dark-blue));color:var(--white);padding:3rem 0 1rem;margin-top:3rem;}
+        .footer-content{max-width:1200px;margin:auto;padding:0 1rem;}
+        .footer-main{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-bottom:2rem;}
+        .footer-section h4{color:var(--gold);font-size:1.125rem;margin-bottom:1rem;}
+        .office-info{margin-bottom:1.5rem;}
+        .office-name{color:var(--gold);font-weight:600;margin-bottom:.5rem;}
+        .office-details{font-size:.9rem;line-height:1.5;opacity:.9;}
+        .contact-item{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;font-size:.9rem;flex-wrap:wrap;} /* 👈 corrigido */
+        .contact-item a{color:inherit;text-decoration:none;}
+        .footer-links{display:flex;flex-direction:column;gap:.75rem;}
+        .footer-link{color:var(--white);opacity:.9;text-decoration:none;font-size:.9rem;transition:opacity .3s;}
+        .footer-link:hover{opacity:1;color:var(--gold);}
+        .footer-bottom{border-top:1px solid rgba(255,255,255,.2);padding-top:1.5rem;text-align:center;}
+        .footer-lgpd{font-size:.8rem;opacity:.8;display:flex;align-items:center;justify-content:center;gap:.5rem;}
+        
+        /* ========== MODAL CÂMERA ========== */
+        .camera-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;z-index:9999}
+        .camera-modal.active{display:flex}
+        .camera-container{background:var(--white);border-radius:12px;padding:1.5rem;width:90%;max-width:500px;text-align:center}
+        .camera-video{width:100%;max-height:320px;background:#000;border-radius:8px;margin-bottom:1rem}
+        .camera-controls{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center}
+
+
+        /* ---------- RESPONSIVO ---------- */
+        @media (max-width:768px){
+            .container{padding:1rem;}
+            .header-content{flex-direction:column;text-align:center;gap:.5rem;}
+            .logo{flex-direction:column;text-align:center;}
+            .logo-title{font-size:1.125rem;}
+            .intro-section,.form-container{padding:1.5rem;}
+            .intro-title{font-size:1.375rem;}
+            .intro-features{grid-template-columns:1fr;}
+            .form-grid{grid-template-columns:1fr;}
+            .submit-button{width:100%;justify-content:center;}
+            .footer-main{grid-template-columns:1fr;text-align:center;}
+        }
+        @media (max-width:480px){
+            .upload-buttons{flex-direction:column;}
+            .upload-button,.camera-btn{width:100%;justify-content:center;}
+            .contact-item{flex-direction:column;align-items:center;text-align:center;gap:.25rem;} /* 👈 corrigido */
+            .camera-controls{flex-direction:column;}
+        }
+        @media (min-width:481px){
+            .contact-item span:last-child,
+            .contact-item a{white-space:nowrap;} /* impede quebra no desktop */
+        }
+
+        /* ---------- CAMPOS CONDICIONAIS ---------- */
+        .conditional-field{display:none;}
+        .conditional-field.show{display:block;}
+    </style>
+</head>
+
+<body>
+
+<!-- ======= HEADER ======= -->
+<header class="header">
+    <div class="header-content">
+        <div class="logo">
+            <div class="logo-icon">⚖</div>
+            <div class="logo-text">
+                <h1 class="logo-title">Escritório Marinho Mendes</h1>
+                <p class="logo-subtitle">Compromisso com a sua justiça e tranquilidade</p>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ======= CONTEÚDO PRINCIPAL ======= -->
+<main class="container">
+
+    <!-- INTRODUÇÃO -->
+    <section class="intro-section">
+        <h2 class="intro-title">Envio Seguro de Documentos</h2>
+        <p class="intro-text">Preencha os dados e envie os documentos solicitados com segurança e praticidade.</p>
+
+        <div class="intro-features">
+            <div class="feature"><div class="feature-icon">🔒</div><span>Dados protegidos por criptografia</span></div>
+            <div class="feature"><div class="feature-icon">📋</div><span>Processo simples e intuitivo</span></div>
+            <div class="feature"><div class="feature-icon">⚡</div><span>Resposta rápida do nosso time</span></div>
+        </div>
+    </section>
+
+    <!-- FORMULÁRIO -->
+    <form class="form-container">
+        <!-- DADOS PESSOAIS -->
+        <div class="form-section">
+            <h3 class="section-title">Informações Pessoais</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label required" for="fullName">Nome Completo</label>
+                    <input class="form-input" id="fullName" placeholder="Digite seu nome completo" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label required" for="cpf">CPF</label>
+                    <input class="form-input" id="cpf" placeholder="000.000.000-00" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label required" for="email">E-mail</label>
+                    <input type="email" class="form-input" id="email" placeholder="seu@email.com" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label required" for="phone">Telefone</label>
+                    <input class="form-input" id="phone" placeholder="(00) 00000-0000" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label required" for="profession">Profissão</label>
+                    <input class="form-input" id="profession" placeholder="Digite sua profissão" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label required" for="maritalStatus">Estado Civil</label>
+                    <select class="form-select" id="maritalStatus" required>
+                        <option value="">Selecione</option>
+                        <option value="solteiro">Solteiro(a)</option>
+                        <option value="casado">Casado(a)</option>
+                        <option value="divorciado">Divorciado(a)</option>
+                        <option value="viuvo">Viúvo(a)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- UPLOADS -->
+        <div class="form-section upload-section">
+            <h3 class="section-title">Documentos Necessários</h3>
+
+            <!-- Documento com foto -->
+            <div class="upload-group required">
+                <div class="upload-header">
+                    <div class="upload-icon">📄</div>
+                    <div class="upload-info">
+                        <div class="upload-title">Documento com Foto *</div>
+                        <div class="upload-description">RG, CNH ou CPF (PDF / imagem até 5 MB)</div>
+                    </div>
+                </div>
+                <input type="file" id="docPhoto" accept=".pdf,.jpg,.jpeg,.png" hidden />
+                <div class="upload-buttons">
+                    <button type="button" class="upload-button" onclick="docPhoto.click()">📎 Selecionar arquivo</button>
+                    <button type="button" class="upload-button camera" onclick="openCamera('docPhoto')">📷 Fotografar documento</button>
+                </div>
+                <div id="preview-docPhoto" class="file-preview">
+                    <div class="file-info"><span>📄</span><span class="file-name"></span></div>
+                    <button type="button" class="remove-file" onclick="removeFile('docPhoto')">Remover</button>
+                </div>
+            </div>
+
+            <!-- Comprovante de endereço -->
+            <div class="upload-group required">
+                <div class="upload-header">
+                    <div class="upload-icon">🏠</div>
+                    <div class="upload-info">
+                        <div class="upload-title">Comprovante de Endereço *</div>
+                        <div class="upload-description">Conta de luz, água ou telefone (PDF / imagem até 5 MB)</div>
+                    </div>
+                </div>
+                <input type="file" id="addressProof" accept=".pdf,.jpg,.jpeg,.png" hidden />
+                <div class="upload-buttons">
+                    <button type="button" class="upload-button" onclick="addressProof.click()">📎 Selecionar arquivo</button>
+                    <button type="button" class="upload-button camera" onclick="openCamera('addressProof')">📷 Fotografar documento</button>
+                </div>
+                <div id="preview-addressProof" class="file-preview">
+                    <div class="file-info"><span>📄</span><span class="file-name"></span></div>
+                    <button type="button" class="remove-file" onclick="removeFile('addressProof')">Remover</button>
+                </div>
+            </div>
+
+            <!-- Certidão casamento/nascimento -->
+            <div id="marriageCertificateGroup" class="upload-group optional conditional-field">
+                <div class="upload-header">
+                    <div class="upload-icon">💒</div>
+                    <div class="upload-info">
+                        <div class="upload-title">Certidão de Casamento/Nascimento</div>
+                        <div class="upload-description">Obrigatória para casados ou viúvos (PDF / imagem até 5 MB)</div>
+                    </div>
+                </div>
+                <input type="file" id="marriageCertificate" accept=".pdf,.jpg,.jpeg,.png" hidden />
+                <div class="upload-buttons">
+                    <button type="button" class="upload-button" onclick="marriageCertificate.click()">📎 Selecionar arquivo</button>
+                    <button type="button" class="upload-button camera" onclick="openCamera('marriageCertificate')">📷 Fotografar documento</button>
+                </div>
+                <div id="preview-marriageCertificate" class="file-preview">
+                    <div class="file-info"><span>📄</span><span class="file-name"></span></div>
+                    <button type="button" class="remove-file" onclick="removeFile('marriageCertificate')">Remover</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUBMIT -->
+        <div class="submit-container">
+            <button type="submit" class="submit-button">🚀 Enviar documentos com segurança</button>
+        </div>
+    </form>
+</main>
+
+<!-- ========== MODAL CÂMERA ========== -->
+<div class="camera-modal" id="cameraModal">
+  <div class="camera-container">
+    <h3 style="margin-bottom:1rem;color:var(--primary)">Fotografar Documento</h3>
+    <video id="cameraVideo" class="camera-video" autoplay muted playsinline></video>
+    <canvas id="cameraCanvas" hidden></canvas>
+    <div class="camera-controls">
+      <button class="upload-button camera" onclick="capturePhoto()">📷 Capturar</button>
+      <button class="upload-button" style="background:var(--gold);border-color:var(--gold);color:#fff" onclick="switchCamera()">🔄 Inverter câmera</button>
+      <button class="upload-button" style="background:var(--error);border-color:var(--error);color:#ff0000" onclick="closeCamera()">❌ Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======= FOOTER ======= -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-main">
+
+            <!-- Escritórios -->
+            <div class="footer-section">
+                <h4>Escritórios</h4>
+
+                <div class="office-info">
+                    <div class="office-name">Campinas</div>
+                    <div class="office-details">Av. José Rocha Bonfim, 214<br>Edifício Milão – Praça Capital<br>CEP 13080-650</div>
+                    <div class="contact-item">
+                        <span>📞</span>
+                        <a href="tel:+551932090417">(19) 3209-0417</a>
+                    </div>
+                </div>
+
+                <div class="office-info">
+                    <div class="office-name">Hortolândia</div>
+                    <div class="office-details">Rua Antônio Nelson Barbosa, 93<br>Jardim do Bosque<br>CEP 13186-231</div>
+                    <div class="contact-item">
+                        <span>📞</span>
+                        <a href="tel:+551938454946">(19) 3845-4946</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Links -->
+            <div class="footer-section">
+                <h4>Links Úteis</h4>
+                <div class="footer-links">
+                    <a class="footer-link" href="privacidade.html">Política de Privacidade</a>
+                    <a class="footer-link" href="termos_de_uso.html">Termos de Uso</a>
+                    <a class="footer-link" href="https://marinhomendes.adv.br/" target="_blank">Sobre o Escritório</a>
+                    <a class="footer-link" href="https://api.whatsapp.com/send/?phone=19974100605&text=Bom+dia&type=phone_number&app_absent=0" target="_blank">Contato (WhatsApp)</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-lgpd"><span>🔒</span>Todos os dados são tratados conforme a Lei Geral de Proteção de Dados (LGPD)</div>
+        </div>
+    </div>
+</footer>
+
+<!-- ========== SCRIPTS ========== -->
+<script>
+/* Máscaras e campos condicionais (mantidos igual) */
+const cpf=document.getElementById('cpf'), tel=document.getElementById('phone');
+cpf?.addEventListener('input',e=>e.target.value=e.target.value.replace(/\D/g,'').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2'));
+tel?.addEventListener('input',e=>e.target.value=e.target.value.replace(/\D/g,'').replace(/(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d)/,'$1-$2'));
+
+/* Preview/remover */
+function removeFile(id){const i=document.getElementById(id);i.value='';document.getElementById(`preview-${id}`).classList.remove('visible')}
+['docPhoto'].forEach(id=>{
+  const input=document.getElementById(id);
+  input?.addEventListener('change',()=>{const p=document.getElementById(`preview-${id}`);if(input.files.length){p.querySelector('.file-name').textContent=input.files[0].name;p.classList.add('visible')}});
+});
+
+/* ========== CÂMERA ========== */
+let currentInput='', stream=null, facing='environment'; // padrão traseira
+const video=document.getElementById('cameraVideo'), modal=document.getElementById('cameraModal');
+
+async function startCamera(){
+  /* Tenta abrir com a orientação definida em "facing" */
+  const constraints={video:{facingMode:{exact:facing}}};
+  try{
+    stream=await navigator.mediaDevices.getUserMedia(constraints);
+  }catch(e){
+    /* Se não conseguir orientação exata, tenta genérica */
+    stream=await navigator.mediaDevices.getUserMedia({video:true});
+  }
+  video.srcObject=stream;
+}
+
+function openCamera(inputId){
+  currentInput=inputId;
+  modal.classList.add('active');
+  startCamera();
+}
+
+function closeCamera(){
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+  modal.classList.remove('active');
+}
+
+function switchCamera(){
+  facing = (facing==='environment') ? 'user' : 'environment';
+  if(stream){stream.getTracks().forEach(t=>t.stop());}
+  startCamera();
+}
+
+function capturePhoto(){
+  const canvas=document.getElementById('cameraCanvas');
+  const w=video.videoWidth, h=video.videoHeight;
+  canvas.width=w; canvas.height=h;
+  canvas.getContext('2d').drawImage(video,0,0,w,h);
+  canvas.toBlob(blob=>{
+    const file=new File([blob],`captura_${Date.now()}.png`,{type:'image/png'});
+    const dt=new DataTransfer();dt.items.add(file);
+    const input=document.getElementById(currentInput);
+    input.files=dt.files;
+    document.getElementById(`preview-${currentInput}`).querySelector('.file-name').textContent=file.name;
+    document.getElementById(`preview-${currentInput}`).classList.add('visible');
+    closeCamera();
+  },'image/png');
+}
+
+    /* ---------- SUBMIT (DEMO) ---------- */
+    document.querySelector('form').addEventListener('submit', e=>{
+        e.preventDefault();
+        alert('Documentos enviados com sucesso (exemplo). Integre ao backend conforme necessidade.');
+        e.target.reset(); document.querySelectorAll('.file-preview').forEach(p=>p.classList.remove('visible'));
+    });
+</script>
+</body>
+</html>
